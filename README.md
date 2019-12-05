@@ -19,4 +19,4 @@ On the admin portal side, the admin must be able to see all surveys that busines
 Also, I added a date range filter to check for the survey created within a specified date range. The cards are paginated using RC pagination.
 
 ### Want more?
-My other tasks was to devise and implement the email service using a third-party email API. We ended up using Twilio's Send Grid service. If you want an excellent C#/.NET example, please look at my other repo named TwilioSendGrid_EmailServiceExample.
+One other primary task was to devise and implement the email service using a third-party email API. We ended up using Twilio's Send Grid service. If you want an excellent C#/.NET example, please look at my other repo named TwilioSendGrid_EmailServiceExample.
