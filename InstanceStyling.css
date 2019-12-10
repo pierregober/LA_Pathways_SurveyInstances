@@ -1,16 +1,15 @@
-#btnStyler {
-    margin: 0px 20px 0px 0px;
-}
+
 #btnSurvey {
     margin: 0px 20px 10px 0px;
 }
-.pagination {
-
-        margin-right: auto !important;
-        margin-left: auto !important;
+#btnBack {
+    margin: 10px 0px 20px 17px;
 }
-#centerIt {
-    text-align: center !important;
+#btnPadder{
+    width: 100px;
+    height: 30px;
+    margin: 5px 0px 0px 0px;
+    padding: 3px 5px 17px 1px;
 }
 h5 {
     text-align: center;
@@ -22,4 +21,51 @@ h5 {
 }
 #pushRight {
     justify-content: center;
+    display: flex;
+
 }
+#instanceText{
+    line-height: 1;
+    text-align: left;
+}
+.max-lines {
+    display: block; /* or inline-block */
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    max-height: 6.6em;
+    line-height: 1.8em;
+  }
+  .formStyle {
+    justify-content: center;
+  }
+  .card-img {
+    display: table-cell;
+    min-height: 100px;
+    justify-content: center;
+  }
+  .card-header {
+    min-height: 75px;
+  }
+  .pagination-venue {
+    justify-content: center;
+  }
+  .card {
+    min-height: 337;
+    width:auto !important;
+  }
+  .form-card {
+    min-height: 337px;
+    max-width: 780px !important;
+  }
+  .card-footer {
+    position: relative;
+    top: 0px;
+    left: 0px;
+  }
+  .padding{
+      padding-top:20px;
+  }
+  .btn-padding{
+      padding-right:5px;
+  }
