@@ -1,7 +1,7 @@
-import React from "react"
-import PropTypes from 'prop-types'
-import swal from 'sweetalert';
-import "./InstancesStyling.css"
+import React from "react";
+import PropTypes from "prop-types";
+import swal from "sweetalert";
+import "./InstancesStyling.css";
 
 const InstanceCard = props => {
     const handleDelete = () => {
@@ -19,13 +19,13 @@ const InstanceCard = props => {
                 if (value === 'delete') {
                     swal({
                         icon: "success",
-                        title: "Delete Successful!"
+                        title: "Delete Successful"
                     })
                     this.props.onHandleDelete(this.props.survey);
-                    console.log("Look in InstanceCard - handleDelete",this.props.survey)
+                    console.log("Look in InstanceCard - handleDelete", this.props.survey)
                 } else {
                     swal({
-                        title: "Woo That was a close one! ;)",
+                        title: "Woo That was a close one!",
                         button: false
                     })
                 }
@@ -37,52 +37,52 @@ const InstanceCard = props => {
     }
     const formatTime = date => {
         let timeOption = {
-            month: "long",
+            month: "short",
             day: "numeric",
             year: "numeric",
             hour12: true,
             hour: "2-digit",
-            minute: "2-digit",
-            timeZoneName: "short"
+            minute: "2-digit"
         };
         return new Date(date).toLocaleTimeString(undefined, timeOption);
     };
-
     return (
-        <div className="row">
-            <div className=" card col-lg-11 align-items-stretch">
-                <div className="card">
-                    <div className="card-header bg-dark">
-                        <h5>{props.survey.survey.name}</h5>
+        <div className="col-lg-4 mt-1">
+            <div className="card ">
+                <div className="card-header">
+                    <div className="ribbon ribbon-clip ribbon-primary ribbonExtras">
+                        <h6>{props.survey.survey.name}</h6>
                     </div>
-                    <div className="card-body">
-                        <p className="card3"><b>{props.survey.userProfile.firstName + " "}{props.survey.userProfile.lastName + " "}</b>
-                            created on {formatTime(props.survey.dateCreated)}</p>
-                        <p className="card3">Last modified on {formatTime(props.survey.dateModified)}</p>
+                </div>
+                <div className="card-body">
+                    <div className="max-lines">
+                        <p id="instanceText"><b>Created on </b>{formatTime(props.survey.dateCreated)}</p>
+                        <p id="instanceText"><b>Last Modified on </b>{formatTime(props.survey.dateModified)}</p>
                     </div>
-                    <div id="centerIt">
-                        <button id="btnStyler" className="btn btn-info" onClick={handleView}>View More</button>
-                        <button id="btnStyler" className="btn btn-danger" onClick={handleDelete} >Delete</button>
+                    <div className="padding row">
+                        <div className="col-6 btn-padding">
+                            <button className="btn btn-pill btn-info " onClick={handleView}>View More</button>
+                        </div>
+                        <div className="col-6 btn-padding">
+                            <button className="btn btn-pill btn-danger " onClick={handleDelete} >Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
-
 InstanceCard.propTypes = {
     survey: PropTypes.shape({
-        id: PropTypes.number
-        , surveyId: PropTypes.number
-        , userId: PropTypes.number
-        , dateCreated: PropTypes.string
-        , dateModified: PropTypes.string
-        , survey: PropTypes.object
-        , userProfile: PropTypes.object
+        id: PropTypes.number,
+        surveyId: PropTypes.number,
+        userId: PropTypes.number,
+        dateCreated: PropTypes.string,
+        dateModified: PropTypes.string,
+        survey: PropTypes.object,
+        userProfile: PropTypes.object
     }),
     onHandleView: PropTypes.func,
-    onHandleDelete: PropTypes.shape({
-        survey: PropTypes.object
-    })
+    onHandleDelete: PropTypes.func
 };
-export default InstanceCard
+export default InstanceCard;
