@@ -13,19 +13,20 @@ class Instances extends React.Component {
   state = {
     startDate: "",
     endDate: "",
-    mappedInstance: []
+    mappedInstance: [],
+    current: 1
   };
   baseState = this.state;
 
   componentDidMount() {
-    _logger("componentDidMount");
+    console.log("componentDidMount");
     SurveyInstance.getAll(0, 6)
       .then(this.onGetInstanceSuccess)
       .catch(this.onGetInstanceError);
   }
 
   onGetInstanceSuccess = data => {
-    console.log("Check onGetInstanceSuccess", data);
+    console.log("onGetInstanceSuccess", data);
     let survey = data.item.pagedItems;
     let totalPageCount = data.item.totalCount;
     this.setState({
@@ -35,7 +36,7 @@ class Instances extends React.Component {
   };
 
   onGetInstanceError = data => {
-    console.log("Check GetInstanceError", data);
+    console.log("FATAL ERROR go and check GetInstanceError", data);
   };
 
   mapInstance = survey => (
@@ -49,10 +50,10 @@ class Instances extends React.Component {
 
   onHandleView = survey => {
     console.log("You got to onHandleView");
-    this.props.history.push(`/survey/instance/${survey.id}/viewmore/`, survey);
+    this.props.history.push(`/admin/survey/instance/${survey.id}/viewmore/`, survey);
   };
   onViewSuccess = data => {
-    console.log("onViewSuccess", data);
+    console.log(data);
   };
 
   onHandleDelete = survey => {
@@ -66,15 +67,21 @@ class Instances extends React.Component {
     console.log("onDeleteSuccess", response);
   };
   onDeleteFailure = response => {
-    console.log("onDeleteFailure", response);
+    console.log("Fatal error the delete did not work.... try again", response);
   };
 
   onChange = current => {
     console.log("onChange:current=", current);
-    this.setState({ mappedInstance: [] });
-    SurveyInstance.getAll(current - 1, 6)
-      .then(this.onGetInstanceSuccess)
-      .catch(this.onGetInstanceError);
+    this.setState({ mappedInstance: [], current: current });
+    if (this.state.startDate) {
+      SurveyInstance.dateRange(this.state.startDate, this.state.endDate, current - 1, 6)
+        .then(this.onGetInstanceSuccess)
+        .catch(this.onRangeFail);
+    } else {
+      SurveyInstance.getAll(current - 1, 6)
+        .then(this.onGetInstanceSuccess)
+        .catch(this.onGetInstanceError);
+    }
   };
 
   handleInputChange = e => {
@@ -105,7 +112,8 @@ class Instances extends React.Component {
 
   resetFilter = () => {
     this.setState(this.baseState);
-    SurveyInstance.getAll(0, 6)
+    this.setState(() => { return { current: 1 } });
+    SurveyInstance.getAll(this.state.current, 6)
       .then(this.onGetInstanceSuccess)
       .catch(this.onGetInstanceError);
   };
@@ -113,74 +121,83 @@ class Instances extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div id="centerIt">
+        <div className="container">
           <div className="divider" />
           <div id="pushRight">
-            <form onSubmit={this.onDateRange}>
-              <div id="pushRight" className="row">
-                <h6 id="centerText">Filter From:</h6>
-                <div className="col-md-2">
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="startDate"
-                    value={this.state.startDate}
-                    required
-                    onChange={this.handleInputChange}
-                  />
-                </div>
-                <h6 id="centerText">To</h6>
-                <div className="col-md-2">
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="endDate"
-                    value={this.state.endDate}
-                    required
-                    onChange={this.handleInputChange}
-                  />
-                </div>
-                <button
-                  id="centerText"
-                  type="button"
-                  className="btn btn-info btn-xs"
-                  onClick={this.dateRanger}
-                >
-                  <a>
-                    {" "}
-                    <span className="fa fa-search"></span>
-                  </a>
+            <div className="row">
+              <div className="col">
+                <form onSubmit={this.onDateRange}>
+                  <div id="pushRight" className="row">
+                    <h6 id="centerText">Filter From:</h6>
+                    <div className="col-am">
+                      <input
+                        type="date"
+                        className="form-control"
+                        name="startDate"
+                        value={this.state.startDate}
+                        required
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                    <h6 id="centerText">To</h6>
+                    <div className="col-am">
+                      <input
+                        type="date"
+                        className="form-control"
+                        name="endDate"
+                        value={this.state.endDate}
+                        required
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                    <button
+                      id="btnPadder"
+                      type="button"
+                      className="btn btn-pill btn-success"
+                      onClick={this.dateRanger}
+                    >
+                      <a>
+                        {" "}
+                        <span className="fa fa-search"></span>
+                      </a> Filter
                 </button>
-
-                <button
-                  id="centerText"
-                  type="reset"
-                  className="btn btn-danger btn-xs"
-                  onClick={this.resetFilter}
-                >
-                  <a>
-                    {" "}
-                    <span className="fa fa-undo"></span>
-                  </a>
+                    <button
+                      id="btnPadder"
+                      type="reset"
+                      className="btn btn-pill btn-secondary"
+                      onClick={this.resetFilter}
+                    >
+                      <a>
+                        {" "}
+                        <span className="fa fa-undo"></span>
+                      </a> Reset
                 </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
           </div>
-
-          <div className="card-columns">{this.state.mappedInstance}</div>
-        </div>
-        <div className="pagination">
-          <div className="mx-auto">
-            <Pagination
-              showTotal={total => `Total ${total} items`}
-              showSizeChanger={true}
-              defaultPageSize={6}
-              defaultCurrent={1}
-              onShowSizeChange={this.onShowSizeChange}
-              onChange={this.onChange}
-              total={this.state.total}
-              locale={localeInfo}
-            />
+          <div className="row">
+            {this.state.mappedInstance}
+          </div>
+          <div className="row">
+            <div className="col">
+              <div className="pagination">
+                <div className="mx-auto">
+                  <Pagination
+                    showTotal={total => `Total ${total} items`}
+                    showSizeChanger={true}
+                    defaultPageSize={6}
+                    defaultCurrent={1}
+                    current={this.state.current}
+                    onShowSizeChange={this.onShowSizeChange}
+                    onChange={this.onChange}
+                    total={this.state.total}
+                    locale={localeInfo}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </React.Fragment>
@@ -189,5 +206,5 @@ class Instances extends React.Component {
 }
 Instances.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func })
-}
+};
 export default Instances;
